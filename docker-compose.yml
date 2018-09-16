@@ -30,11 +30,11 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
-  
+
   alertmanager:
     image: prom/alertmanager:v0.15.1
     container_name: alertmanager
-    volumes: 
+    volumes:
       - ./alertmanager/:/etc/alertmanager/
     command:
       - '--config.file=/etc/alertmanager/config.yml'
@@ -68,6 +68,22 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  github-exporter:
+    image: infinityworks/github-exporter:latest
+    container_name: github-exporter
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    expose:
+      - 9171
+    ports:
+      - 9171:9171
+    networks:
+      - monitor-net
+    environment:
+      - REPOS=freeCodeCamp/freeCodeCamp, gatsbyjs/gatsby
+      - GITHUB_TOKEN=8cb713e6ae3f1c1e5306c951651ded953c292758
+
   cadvisor:
     image: google/cadvisor:v0.28.3
     container_name: cadvisor
@@ -84,7 +100,7 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
-  
+
   grafana:
     image: grafana/grafana:5.2.2
     container_name: grafana
