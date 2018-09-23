@@ -155,7 +155,7 @@ services:
       org.label-schema.group: "monitoring"
 
   influxdb:
-    image: influxdb:latest
+    image: influxdb:1.6
     volumes:
       - ./influxdb/:/etc/influxdb/
     environment:
