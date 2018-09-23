@@ -30,6 +30,8 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+    depends_on:
+      - influxdb
 
   alertmanager:
     image: prom/alertmanager:v0.15.1
@@ -137,10 +139,10 @@ services:
     image: stefanprodan/caddy
     container_name: caddy
     ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
+      - 3000:3000
+      - 9090:9090
+      - 9093:9093
+      - 9091:9091
     volumes:
       - ./caddy/:/etc/caddy/
     environment:
@@ -151,3 +153,17 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  influxdb:
+    image: influxdb:latest
+    volumes:
+      - ./influxdb/:/etc/influxdb/
+    environment:
+      - INFLUXDB_DB=prometheus
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+    ports:
+      - 8086:8086
+      - 8083:8083
+    tty: true
+    networks:
+      - monitor-net

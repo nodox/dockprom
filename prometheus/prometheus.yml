@@ -11,6 +11,13 @@ global:
 rule_files:
   - "alert.rules"
 
+# Add longer term storage with influxdb using docker host names
+remote_write:
+  - url: http://influxdb:8086/api/v1/prom/write?db=prometheus
+
+remote_read:
+  - url: http://influxdb:8086/api/v1/prom/read?db=prometheus
+
 # A scrape configuration containing exactly one endpoint to scrape.
 scrape_configs:
   - job_name: 'nodeexporter'
