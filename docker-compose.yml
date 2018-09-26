@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     expose:
       - 9090
+    ports:
+      - 9090:9090
     networks:
       - monitor-net
     labels:
@@ -71,20 +73,20 @@ services:
       org.label-schema.group: "monitoring"
 
   github-exporter:
-    image: infinityworks/github-exporter:latest
+    image: gatsbymanor/github-exporter:latest
     container_name: github-exporter
     tty: true
     stdin_open: true
     restart: unless-stopped
     expose:
-      - 9171
-    ports:
-      - 9171:9171
+      - 5001
     networks:
       - monitor-net
     environment:
-      - REPOS=freeCodeCamp/freeCodeCamp, gatsbyjs/gatsby
-      - GITHUB_TOKEN=8cb713e6ae3f1c1e5306c951651ded953c292758
+      - REPO=gatsbyjs/gatsby
+      - GITHUB_TOKEN=6120e58326cf0eb38c344eb7333de50f9db61cb3
+    labels:
+      org.label-schema.group: "monitoring"
 
   cadvisor:
     image: google/cadvisor:v0.28.3
@@ -119,6 +121,8 @@ services:
     restart: unless-stopped
     expose:
       - 3000
+    ports:
+      - 3000:3000
     networks:
       - monitor-net
     labels:
@@ -130,25 +134,6 @@ services:
     restart: unless-stopped
     expose:
       - 9091
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - 3000:3000
-      - 9090:9090
-      - 9093:9093
-      - 9091:9091
-    volumes:
-      - ./caddy/:/etc/caddy/
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
     networks:
       - monitor-net
     labels:
