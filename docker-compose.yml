@@ -11,7 +11,7 @@ volumes:
 services:
 
   prometheus:
-    image: prom/prometheus:v2.3.2
+    image: prom/prometheus:v2.4.3
     container_name: prometheus
     volumes:
       - ./prometheus/:/etc/prometheus/
@@ -141,11 +141,14 @@ services:
 
   influxdb:
     image: influxdb:1.6
+    container_name: influxdb
     volumes:
       - ./influxdb/:/etc/influxdb/
     environment:
       - INFLUXDB_DB=prometheus
-      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=happyfeet
     ports:
       - 8086:8086
       - 8083:8083
